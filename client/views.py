@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.template.context_processors import csrf
 
 from .forms import UploadImgForm
-from .models import Client, Sex, Citizenship, FamilyState, Children, City, Telephone, State, Skills
+from .models import Client, Sex, Citizenship, FamilyState, Children, City, Telephone, State, Skills, Education
 
 
 def client_main_page(request):
@@ -47,6 +47,7 @@ def client_edit_main(request):
             flat=request.POST['flat'],
             telegram_link=request.POST['telegram_link'],
             skills_id=request.POST['skills_id'],
+            education_id=request.POST['education_id'],
             email=request.POST['email'],
             link_linkedin=request.POST['link_linkedin'],
             state=State(state_word=request.POST['state']),
@@ -73,6 +74,7 @@ def client_edit_main(request):
             request.POST['phone'],
             request.POST['telegram_link'],
             request.POST['skills_id'],
+            request.POST['education_id'],
             request.POST['email'],
             request.POST['link_linkedin'],
             request.POST['state'],
@@ -132,3 +134,23 @@ def client_edit_photo(request):
     return render(request=request,
                   template_name='client/client_edit_photo.html',
                   context=response)
+
+
+def client_edit_education(request):
+    response = csrf(request)
+
+    response['client_img'] = '/media/user_1.png'
+
+    if request.POST:
+        print("save_client_education - request.POST")
+
+        education = Education(Education=request.POST['education_1'])
+        # skill.save()      # TODO uncomment after 'UserLogin' module done!!!
+
+        print("education: %s" % request.POST['education_1'])
+
+        return redirect('/client/edit')
+    else:
+        print('client_edit_education - request.GET')
+
+    return render(request, 'client/client_edit_education.html', response)
