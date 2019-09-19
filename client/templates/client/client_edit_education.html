@@ -12,17 +12,32 @@
 
  <form action="/client/edit/education">
 
-        <input type="text" hidden name="id" value="{{ education.id }}>
-        <textarea rows="1" name="education" cols="30"> 1 </textarea>
+        <input type="text" hidden name="id" value="{{ education.id }}">
+        <textarea rows="1" name="education" cols="30">1</textarea>
 
         <input type="text" hidden name="id" value="{{ education.id }}">
-        <textarea rows="1" name="education" cols="30">2</textarea>
+        <textarea rows="1" name="education" cols="30"></textarea>
 
         <input type="text" hidden name="id" value="{{ education.id }}">
-        <textarea rows="1" name="education" cols="30">3</textarea>
+        <textarea rows="1" name="education" cols="30"></textarea>
         <input type="submit" value="OK"><br>
 
+        <div class="form-group">
+             <label for="comment">Comment:</label>
+            <textarea class="icon-trash" rows="5" id="comment"> </textarea>
 
+        </div>
+
+        <ul>
+            <li class="media" rows="1" name="education" cols="30"> Учебное заведение <input type="text"></li>
+            <li class="media" rows="1" name="education" cols="30"> Предметная область <input type="text"></li>
+            <li class="media" rows="1" name="education" cols="30"> Специальность <input type="text"></li>
+            <li class="media" rows="1" name="education" cols="30"> Квалификация <input type="text"></li>
+            Период обучения
+            <li class="media" rows="1" name="education" cols="30"> Дата начала <input type="date" name="date_start" aria-label="date_start" id="id_date_start"> </li>
+            <li class="media" rows="1" name="education" cols="30"> Дата окончания <input type="date" name="date_end" aria-label="date_end" id="id_date_end"></li>
+            <li class="media" rows="1" name="education" cols="30"> Сертификат <input type="text"></li>
+        </ul>
 
     </form>
 
@@ -32,6 +47,6 @@
 
 
  <button type="submit">Добавить</button>
-
+<button type="button" class="btn btn-outline-primary">добавить образование</button>
 {% endblock %}
 
