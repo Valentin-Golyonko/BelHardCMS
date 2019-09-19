@@ -8,7 +8,26 @@
 {% block content %}
 
     <h3>Образование</h3>
-    <input type="text">
+
+
+ <form action="/client/edit/education">
+
+        <input type="text" hidden name="id" value="{{ education.id }}>
+        <textarea rows="1" name="education" cols="30"> 1 </textarea>
+
+        <input type="text" hidden name="id" value="{{ education.id }}">
+        <textarea rows="1" name="education" cols="30">2</textarea>
+
+        <input type="text" hidden name="id" value="{{ education.id }}">
+        <textarea rows="1" name="education" cols="30">3</textarea>
+        <input type="submit" value="OK"><br>
+
+
+
+    </form>
+
+
+
 
 
 

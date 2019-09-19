@@ -154,3 +154,8 @@ def client_edit_education(request):
         print('client_edit_education - request.GET')
 
     return render(request, 'client/client_edit_education.html', response)
+
+
+
+
+
