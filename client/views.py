@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 
-from .models import Client, Sex, Citizenship, Family_state, Children, City, Telephone, State, Skills
+from .models import Client, Sex, Citizenship, Family_state, Children, City, Telephone, State, Skills, Experience
 
 
 def client_main_page(request):
@@ -97,5 +97,23 @@ def save_client_edit_skills(request):
         # skill.save()
 
         print("skill: %s" % request.POST['skill_1'])
+
+    return redirect('/client/edit')
+
+def client_edit_experience(request):
+    response = csrf(request)
+
+    response['client_img'] = 'client/img/user_1.png'
+
+    return render(request, 'client/client_edit_experience.html', response)
+
+def save_client_edit_experience(request):
+    if request.POST:
+        print("save_client_edit_experience - request POST")
+
+        experiences = Experience(experience=request.POST)
+
+
+        print("experience: %s" % request.POST['experience_1'])
 
     return redirect('/client/edit')
