@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+import re
 
 UserModel = get_user_model()
 
@@ -25,8 +26,9 @@ class City(models.Model):
 
 
 class Certificate(models.Model):
-    img = models.ImageField()  # ?????????????????????
-    link = models.URLField(max_length=100)
+    img = models.ImageField(blank=True, null=True, verbose_name='certificate_img')  # ?????????????????????
+    link = models.URLField(max_length=100, verbose_name='certificate_link',
+                           blank=True, null=True)
 
 
 class EducationWord(models.CharField):
@@ -48,7 +50,7 @@ class SkillsWord(models.Model):
 
 
 class Skills(models.Model):
-    skills = models.CharField(max_length=100)  # ?????????????????????
+    skills = models.CharField(max_length=100, blank=True, null=True)  # ?????????????????????
 
 
 class Sphere(models.Model):
@@ -95,7 +97,7 @@ class State(models.Model):
 class Client(models.Model):
     user_client = models.OneToOneField(UserModel, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Имя')
-    last_name = models.CharField(max_length=100, verbose_name='Фамилия')
+    lastname = models.CharField(max_length=100, verbose_name='Фамилия')
     patronymic = models.CharField(max_length=100, verbose_name='Отчество')
 
     sex = models.ForeignKey(Sex, on_delete=models.SET_NULL, null=True, blank=True)
@@ -130,11 +132,25 @@ class Client(models.Model):
     # state
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, blank=True)
 
+    def __str__(self):
+        return "%s %s %s" % (self.name, self.lastname, self.patronymic)
+
+    def delete(self, *args, **kwargs):
+        self.img.delete()
+        # add client_CV.pdf
+        # add certificate.pdf
+        super().delete(*args, **kwargs)
+
 
 class Telephone(models.Model):
-    telephone_number = models.CharField(max_length=20)
+    telephone_number = models.CharField(max_length=20, blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        # do something
-        super().save(*args, **kwargs)
+        pattern = "^[+]{1}[0-9]{1,20}$"
+        tel = self.telephone_number
+        if re.match(pattern=pattern, string=tel):
+            print("phone to save: %s" % tel)
+            # super().save(*args, **kwargs)   # TODO uncomment after 'UserLogin' module done!!!
+        else:
+            print("incorrect phone number")
