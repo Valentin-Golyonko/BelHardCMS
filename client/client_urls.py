@@ -14,4 +14,9 @@ urlpatterns = [
     path('save_edit_main', views.save_client_edit_main, name='client_save_edit_main'),
     path('save_edit_skills', views.save_client_edit_skills, name='client_save_edit_skills'),
     path('save_edit_photo', views.save_client_edit_photo, name='client_save_edit_photo'),
+
+    # CV part
+    path('edit/cv', views.client_edit_cv, name='client_edit_cv'),
+    path('save_edit_cv', views.save_client_edit_cv, name='client_save_edit_cv')
+
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 
-from .models import Client, Sex, Citizenship, FamilyState, Children, City, Telephone, State, Skills
+from .models import Client, Sex, Citizenship, FamilyState, Children, City, Telephone, State, Skills, CV
 
 
 def client_main_page(request):
@@ -121,3 +121,26 @@ def save_client_edit_photo(request):
         print("photo: %s" % request.POST['photo'])
 
     return redirect('/client/edit')
+
+def client_edit_cv(request):
+    response = csrf(request)
+
+    return render(request, 'client/client_edit_cv.html', response)
+
+def save_client_edit_cv(request):
+    if request.POST:
+        cv = CV(
+            position=request.POST['position'],
+            time_job=request.POST['time_job'],
+            salary=request.POST['salary'],
+            type_salary=request.POST['type_salary'],
+        )
+        #как бы сейв
+        print(
+            request.POST['position'],
+            request.POST['time_job'],
+            request.POST['salary'],
+            request.POST['type_salary']
+        )
+
+    return redirect('edit/cv')
