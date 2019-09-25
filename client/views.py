@@ -224,46 +224,45 @@ def client_edit_education(request):
     if request.method == 'POST':
         print("save_client_education - request.POST")
 
-        education_arr = request.POST.getlist('education')
-        print("education: %s" % education_arr)
+        university = request.POST['education']   # добавить переменные
 
-        education = Education(
-            education=request.POST['education'],
-            subject_area=request.POST['subject_area'],
-            specialization=request.POST['specialization'],
-            qualification=request.POST['qualification'],
-            date_start=request.POST['date_start'],  # mast be NOT '' - НУжна проверка на пустое значение!
-            date_end=request.POST['date_end'],  # mast be NOT '' - НУжна проверка на пустое значение!
-            certificate=Certificate(
+        date_start = request.POST['date_start']
+        date_end = request.POST['date_end']
+
+        if any([university, date_start, date_end]):
+            certificate = Certificate(
                 img=request.POST['certificate_img'],
                 link=request.POST['certificate_url']
-            ).save(),
+            )
+            certificate.save()
 
-        )
+            education = Education(
+                education=university,
+                subject_area=request.POST['subject_area'],
+                specialization=request.POST['specialization'],
+                qualification=request.POST['qualification'],
+                date_start=date_start if date_start else None,  # mast be NOT '' - НУжна проверка на пустое значение!
+                date_end=date_end if date_end else None,  # mast be NOT '' - НУжна проверка на пустое значение!
+                certificate=certificate
+            )
+            education.save()
 
-        if any(education_arr):
-           # print("education: %s" % education_arr)
-            for i in education_arr:
-                education = Education(education=i)
-                education.save()
-
-                client = Client.objects.get(user_client=request.user)
-                client.education = Education
-                client.save()
-            else:
-                print('No education')
+            client = Client.objects.get(user_client=request.user)
+            client.education = education
+            client.save()
         else:
+            print('No education')
             return redirect(to='/client/edit/education')
 
-            #print(
-           # request.POST['education'],
-            # request.POST['subject_area'],
-            #request.POST['specialization'],
-            #request.POST['qualification'],
-            #request.POST['date_start'],
-            #request.POST['date_end'],
-            #request.POST['certificate_img'],
-            #request.POST['certificate_url'],)
+        print(
+            request.POST['education'],
+            request.POST['subject_area'],
+            request.POST['specialization'],
+            request.POST['qualification'],
+            request.POST['date_start'],
+            request.POST['date_end'],
+            request.POST['certificate_img'],
+            request.POST['certificate_url'], )
 
         return redirect('/client/edit')
     else:

@@ -5,9 +5,13 @@
 /.
 
 # Datasource local storage ignored files
+<<<<<<< HEAD
 /dataSources.local.xml
 # Default ignored files
 /workspace.xml
 
 # Project exclude paths
 /.
+=======
+/dataSources.local.xml
+>>>>>>> 1582e7b8fe74941bc90fdf43845303f61daea82f
