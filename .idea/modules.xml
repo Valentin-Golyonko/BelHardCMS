@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/BELHARD CRM.iml" filepath="$PROJECT_DIR$/.idea/BELHARD CRM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BelHardCMS.iml" filepath="$PROJECT_DIR$/.idea/BelHardCMS.iml" />
     </modules>
   </component>
 </project>
