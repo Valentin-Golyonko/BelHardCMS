@@ -1,7 +1,7 @@
 from django import forms
-from django.forms import formset_factory    # modelformset_factory
+from django.forms import formset_factory, modelformset_factory
 
-from .models import Client, Skills
+from .models import Client, Skills, Experience, Education
 
 # special field names for the Formsets
 # https://docs.djangoproject.com/en/2.2/topics/forms/formsets/
@@ -49,3 +49,40 @@ class AddSkillForm(forms.ModelForm):
 
 
 AddSkillFormSet = formset_factory(AddSkillForm)
+
+
+class AddExperienceForm(forms.ModelForm):
+    class Meta:
+        model = Experience
+        fields = ('name',)
+
+
+class AddEducationForm(forms.ModelForm):
+    """ Test Code - Module Form Set """
+    class Meta:
+        model = Education
+        certificate = forms.ModelChoiceField
+        fields = ('education', 'subject_area', 'specialization',
+                  'qualification', 'date_start', 'date_end', 'certificate')
+
+        widgets = {
+            'education': forms.TextInput(attrs={'class': 'form-control'}),
+            'subject_area': forms.TextInput(attrs={'class': 'form-control'}),
+            'specialization': forms.TextInput(attrs={'class': 'form-control'}),
+            'qualification': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_start': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_end': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+
+        }
+
+        data = {
+            # each form field data with a proper index form
+            'edu_form-0-raw': 'my raw field string',
+
+            # form status, number of forms
+            'edu_form-INITIAL_FORMS': 1,
+            'edu_form-TOTAL_FORMS': 2,
+        }
+
+
+AddEducationFormSet = formset_factory(AddEducationForm)
