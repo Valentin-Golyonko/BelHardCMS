@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-
+from client.views import opinion_list
 from recruit import views
 from recruit.views import (base_of_applicants, CreateJobInterview,
                            EditJobInterview, DelJobInterview,
@@ -11,7 +11,10 @@ from recruit.views import (base_of_applicants, CreateJobInterview,
                            RecruitEditMain, RecruitEditExperience,
                            RecruitEditSkills, RecruitEditPhoto,
                            RecruitEditEducation, RecruitShowSkills,
-                           RecruitShowEducation, RecruitShowExperience)
+
+                           RecruitShowEducation, RecruitShowExperience,
+                           recruit_check_task, OpinionDeleteAdmin, answer_create)
+
 
 """ PEP 8: Wildcard imports (from <module> import *) should be avoided, 
 as they make it unclear which names are present in the namespace, 
@@ -54,7 +57,9 @@ urlpatterns = [
     path(r'client_filtration/', views.client_filtration, name='client_filtration'),
     path('change_task/<id_t>', views.change_task.as_view(), name='change_task_url'),
     path('pattern_task/', views.pattern_task.as_view(), name='pattern_task_url'),
-
+    path('recruiter_tasks/', views.recruiters_tasks, name='recruiters_tasks_url'),
+    path('choose_rec_task/', views.recruit_chooose_task, name='choose_rec_task_url'),
+    path('rec_check_task/', views.recruit_check_task, name='recruit_check_task_url'),
 
     # Team Rome (start)
     path('profile/', RecruitProfile.as_view(), name='recruit_profile'),
@@ -72,5 +77,8 @@ urlpatterns = [
          name='recruit_show_education'),
     path('show_experience', RecruitShowExperience.as_view(),
          name='recruit_show_experience'),
+    path('opinions', opinion_list, name='clients_opinions'),
+    path('opinions/<int:pk>/answer/', answer_create, name='clients_answer_create'),
+    path('opinions/<int:pk>/delete/', OpinionDeleteAdmin.as_view(), name='clients_opinions_delete'),
     # Team Rome (end)
 ]

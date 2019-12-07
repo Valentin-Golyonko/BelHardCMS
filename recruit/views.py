@@ -1,3 +1,6 @@
+from time import perf_counter
+from collections import defaultdict
+
 from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
@@ -9,7 +12,7 @@ from client.edit.check_clients import (load_client_img)
 from client.models import (CV, JobInterviews, FilesForJobInterviews, Vacancy,
                            State)
 from client.models import (Chat, Message, Tasks, UserModel, SubTasks, Settings,
-                           Client, Employer, Direction)
+                           Client, Opinion, Answer, Employer, Direction)
 from recruit.edit_pages.check_recruit import (recruit_check)
 from recruit.edit_pages.r_forms import (RecruitUploadImgForm)
 from recruit.edit_pages.r_pages_get import (recruit_edit_page_get,
@@ -600,10 +603,12 @@ class client_task_adding(View):
         client = Client.objects.get(id=id_a)
         client_user = client.user_client #ссылается на UserModel
         client_activ_tasks = Tasks.objects.filter(user=client_user, status=False) #просмотр активных задач клинета
-        return render(request, template_name='recruit/adding_task_to_client.html',
-                      context={'client': client,
-                               'client_user': client_user,
-                               'client_activ_tasks': client_activ_tasks, })
+        client_closed_tasks = Tasks.objects.filter(user=client_user, status=True)
+        return render(request, template_name='recruit/adding_task_to_client.html', context={'client':client,
+                                                                                            'client_user': client_user,
+                                                                                            'client_activ_tasks':client_activ_tasks,
+                                                                                            'client_closed_tasks': client_closed_tasks})
+
 
     def post(self, request, id_a):
         client = Client.objects.get(id=id_a)
@@ -636,8 +641,7 @@ def favorites(request):
     own_status = Recruiter.objects.get(recruiter=request.user)
     # own_status = recruit
     clients = client_filtration(request, own_status)
-    url_check = 1
-    context = {'applicants': clients, 'url_check': url_check}
+    context = {'applicants': clients}
 
     return render(request, template_name='recruit/favorites.html',
                   context=context)
@@ -844,4 +848,77 @@ class RecruitShowExperience(TemplateView):  # TeamRome
                     "data": recruit_experience_page_get(recruit_instance),
                     }
         return render(request, self.template_name, response)
+
+
+def recruiters_tasks(request):
+    me = Recruiter.objects.get(recruiter=request.user)
+    all_tasks = RecruitersTasks.objects.all()
+    my_tasks = RecruitersTasks.objects.filter(recruiters=me)
+    free_tasks = RecruitersTasks.objects.filter(recruiters=None)
+    my_tasks_new = my_tasks.filter(status=False)
+    my_tasks_old = my_tasks.filter(status=True)
+
+
+    return render(request=request, template_name='recruit/recruiters_tasks.html', context={'all_tasks': all_tasks,
+                                                                                           'my_tasks': my_tasks,
+                                                                                           'free_tasks': free_tasks,
+                                                                                           'me': me,
+                                                                                           'my_tasks_new': my_tasks_new,
+                                                                                           'my_tasks_old': my_tasks_old})
+
+
+def recruit_chooose_task(request):
+    choice = int(request.GET['choice'])
+    my_id = request.GET['my_id']
+    user = UserModel.objects.get(id=my_id)
+    recruiter = Recruiter.objects.get(recruiter=user)
+    task_id = request.GET['task_id']
+    rec_task = RecruitersTasks.objects.get(id=task_id)
+
+    if choice == 1:
+        rec_task.recruiters = recruiter
+        rec_task.save()
+
+    return HttpResponse()
+
+
+def recruit_check_task(request):
+    my_id = request.GET['my_id']
+    task_id = request.GET['task_id']
+    this_task = RecruitersTasks.objects.get(id=task_id)
+    if this_task.status == False:
+        this_task.status = True
+    else:
+        this_task.status = False
+    this_task.save()
+
+    return HttpResponse()
+
+class OpinionDeleteAdmin(View):
+    def get(self, request, pk):
+        opinion = get_object_or_404(Opinion, pk=pk)
+        return render(request, 'recruit/opinion_admin_delete.html',
+                          context={'opinion': opinion})
+
+    def post(self, request, pk):
+        opinion = Opinion.objects.filter(pk=pk)
+        opinion.delete()
+        return redirect(reverse('clients_opinions'))
+
+
+def answer_create(request, pk):
+    opinion = get_object_or_404(Opinion, id=pk)
+    answer = Answer.objects.filter(pk=pk)
+    form = AnswerForm()
+
+    if request.method == "POST":
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.opinion = opinion
+            form.user = request.user
+            form.save()
+            return redirect('clients_opinions')
+    return render(request, 'recruit/opinion_answer_admin_create.html',
+                  context={'form': form, 'opinion': opinion, "answer": answer})
 
