@@ -16,7 +16,7 @@ class RecruiterEditEducationTests(TestCase):
     TEST_USER_PASSWORD = 'test_user'
     TEST_USER_EMAIL = 'test_user'
 
-    image = Image.open("client/media/user_1.png")
+    image = Image.open("media/user_1.png")
 
     TEST_DATA_1 = {'institution': 'rocket_science_1',
                    'subject_area': 'rocket_science_1',

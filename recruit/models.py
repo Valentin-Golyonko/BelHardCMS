@@ -19,7 +19,7 @@ class Recruiter(models.Model):  # TeamRome
                                      on_delete=models.CASCADE,
                                      null=True, blank=True)
     patronymic = models.CharField(max_length=100,
-                                  verbose_name='Отчество')
+                                  verbose_name='Отчество', blank=True, null=True, default='')
     date_born = models.DateField(null=True, blank=True)
 
     sex = models.ForeignKey(Sex, on_delete=models.SET_NULL,

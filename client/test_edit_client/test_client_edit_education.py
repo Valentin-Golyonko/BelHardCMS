@@ -19,7 +19,7 @@ class ClientEditEducationTests(TestCase):
     TEST_USER_EMAIL = 'test_user'
     # with open("client/test_edit_client/user_1.png") as file:
 
-    image = Image.open("client/media/user_1.png")
+    image = Image.open("media/user_1.png")
 
     TEST_DATA_1 = {'institution': 'Белорусская государственная академия искусств',
                    'subject_area': 'rocket_science_1',
