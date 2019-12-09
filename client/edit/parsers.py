@@ -154,3 +154,4 @@ def pars_edu_request(req_post, _file) -> list:  # TeamRome
         out_arr.append(dict_up)
     print("\tout_arr (%s): %s" % (len(out_arr), out_arr))
     return out_arr
+
